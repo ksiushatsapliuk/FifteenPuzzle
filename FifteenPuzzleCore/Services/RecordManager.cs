@@ -29,7 +29,7 @@ namespace FifteenPuzzleCore.Services
             }
             catch (Exception)
             {
-                // Ignore file errors, keep default value
+                
             }
         }
 
@@ -44,7 +44,7 @@ namespace FifteenPuzzleCore.Services
                 }
                 catch (Exception)
                 {
-                    // Ignore file errors
+                     
                 }
             }
         }

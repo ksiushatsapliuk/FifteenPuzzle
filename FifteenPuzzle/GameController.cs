@@ -96,7 +96,7 @@ namespace FifteenPuzzle
                     _manuallyStoppedSolving = true;
                     CancelAutoSolve(showMessage: true);
                 }
-                e.Cancel = true;  // Prevent actual closing, just hide
+                e.Cancel = true; 
                 _solverProgressForm.Hide();
             };
         }
@@ -152,27 +152,22 @@ namespace FifteenPuzzle
                 _autoSolveCTS = new CancellationTokenSource();
                 _manuallyStoppedSolving = false;
                 OnAutoSolverStateChanged();
-
-                // Show progress form while finding solution
+ 
                 _solverStatusLabel.Text = "Searching for solution...";
                 _solverProgressBar.Style = ProgressBarStyle.Marquee;
                 _solverProgressForm.Show();
 
-                // Get current board state
                 var currentState = _gameBoard.State;
                 int emptyX = _gameBoard.EmptyX;
                 int emptyY = _gameBoard.EmptyY;
 
-                // Find solution (this could take time)
                 var solution = await _gameSolver.FindSolutionAsync(
                     currentState, emptyX, emptyY, _autoSolveCTS.Token);
 
-                // Hide progress form once solution is found
                 _solverProgressForm.Hide();
 
                 if (_manuallyStoppedSolving)
                 {
-                    // User cancelled during solution finding
                     return;
                 }
 
@@ -189,7 +184,6 @@ namespace FifteenPuzzle
                 MessageBox.Show($"Solution found with {solution.Count} moves. Starting execution.",
                    "Auto Solver", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                // Execute the solution without showing progress form
                 await ExecuteSolutionAsync(solution, _autoSolveCTS.Token);
 
                 if (!_gameBoard.IsComplete() && !_manuallyStoppedSolving)
@@ -200,7 +194,6 @@ namespace FifteenPuzzle
             }
             catch (OperationCanceledException)
             {
-                // The solving was canceled, handled by CancelAutoSolve
                 _solverProgressForm.Hide();
             }
             catch (Exception ex)
@@ -238,16 +231,14 @@ namespace FifteenPuzzle
                         break;
                     }
 
-                    // Ensure UI updates by yielding back to UI thread
                     await Task.Delay(300, cancellationToken);
 
-                    // Process Windows messages to keep UI responsive
                     Application.DoEvents();
                 }
             }
             catch (OperationCanceledException)
             {
-                // Operation was canceled, handled by CancelAutoSolve
+
             }
             catch (Exception ex)
             {

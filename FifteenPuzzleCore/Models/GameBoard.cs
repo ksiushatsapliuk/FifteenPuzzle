@@ -34,29 +34,22 @@ namespace FifteenPuzzleCore.Models
 
         public bool MakeMove(int x, int y)
         {
-            // Дозволяємо хід тільки якщо плитка поруч з порожньою клітинкою
             if (!IsAdjacent(x, y, _emptyX, _emptyY))
                 return false;
 
-            // Якщо гра завершена і ми не в режимі автоматичного вирішення, не дозволяємо ходи
             if (CurrentState == GameState.Completed && !_isSolving)
                 return false;
 
-            // Swap the tile with the empty cell
             _state[_emptyY, _emptyX] = _state[y, x];
             _state[y, x] = 0;
 
-            // Update empty position
             _emptyX = x;
             _emptyY = y;
 
-            // Increment move counter
             _moveCount++;
 
-            // Повідомляємо про зміну дошки
             OnBoardChanged();
 
-            // Check if the game is complete
             if (IsComplete() && CurrentState != GameState.Completed)
             {
                 CurrentState = GameState.Completed;
@@ -68,19 +61,16 @@ namespace FifteenPuzzleCore.Models
 
         public bool IsAdjacent(int x1, int y1, int x2, int y2)
         {
-            // Check if two cells are adjacent (horizontally or vertically)
             return (Math.Abs(x1 - x2) == 1 && y1 == y2) || (Math.Abs(y1 - y2) == 1 && x1 == x2);
         }
 
         public bool IsComplete()
         {
-            // Check if the puzzle is in its solved state
             int expected = 1;
             for (int y = 0; y < 4; y++)
             {
                 for (int x = 0; x < 4; x++)
                 {
-                    // The last cell should be empty (0)
                     if (y == 3 && x == 3)
                     {
                         if (_state[y, x] != 0)
@@ -100,7 +90,7 @@ namespace FifteenPuzzleCore.Models
         {
             _isSolving = isSolving;
             CurrentState = isSolving ? GameState.Solving : (IsComplete() ? GameState.Completed : GameState.InProgress);
-            OnBoardChanged(); // Повідомляємо про зміну стану
+            OnBoardChanged();
         }
 
         protected virtual void OnBoardChanged()

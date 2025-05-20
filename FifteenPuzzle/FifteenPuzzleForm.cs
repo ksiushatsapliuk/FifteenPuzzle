@@ -81,9 +81,6 @@ namespace FifteenPuzzle
         {
             try
             {
-                // Не деактивуємо кнопку, щоб її можна було використовувати для скасування
-                // solveButton.Enabled = false;
-
                 await _gameController.ToggleAutoSolveAsync();
             }
             catch (Exception ex)
@@ -91,7 +88,6 @@ namespace FifteenPuzzle
                 MessageBox.Show($"Error in Auto Solve: {ex.Message}\n{ex.StackTrace}",
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            // Видаляємо finally блок, бо не потрібно повторно активувати кнопку
         }
 
         private void OnBoardChanged(object sender, BoardChangedEA e)
@@ -157,10 +153,8 @@ namespace FifteenPuzzle
             bool isSolving = _gameController.IsAutoSolving;
             solveButton.Text = isSolving ? "Stop Solving" : "Auto Solve";
 
-            // Кнопка New Game деактивується під час автовирішення
             newGameButton.Enabled = !isSolving;
 
-            // Деактивуємо плитки пазлу під час автовирішення
             UpdateButtonStates();
         }
 
@@ -172,7 +166,6 @@ namespace FifteenPuzzle
             {
                 for (int x = 0; x < 4; x++)
                 {
-                    // Кнопки деактивуються під час автовирішення або коли вони порожні
                     _buttons[y, x].Enabled = !isSolving && _buttons[y, x].Text != "";
                 }
             }

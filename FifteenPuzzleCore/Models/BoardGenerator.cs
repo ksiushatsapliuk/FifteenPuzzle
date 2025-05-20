@@ -15,7 +15,6 @@ namespace FifteenPuzzleCore.Models
 
             do
             {
-                // Start with a solved puzzle
                 int value = 1;
                 for (int y = 0; y < 4; y++)
                 {
@@ -26,12 +25,10 @@ namespace FifteenPuzzleCore.Models
                     }
                 }
 
-                // The last position (3,3) is the empty cell
                 state[3, 3] = 0;
                 emptyX = 3;
                 emptyY = 3;
 
-                // Shuffle by making random moves
                 ShuffleByRandomMoves(ref state, ref emptyX, ref emptyY, 200);
             }
             while (!IsSolvable(state, emptyY) || IsComplete(state));
@@ -43,35 +40,27 @@ namespace FifteenPuzzleCore.Models
         {
             for (int i = 0; i < moves; i++)
             {
-                // Get all possible moves from current empty position
                 List<Point> possibleMoves = new List<Point>();
 
-                // Check above
                 if (emptyY > 0)
                     possibleMoves.Add(new Point(emptyX, emptyY - 1));
 
-                // Check below
                 if (emptyY < 3)
                     possibleMoves.Add(new Point(emptyX, emptyY + 1));
 
-                // Check left
                 if (emptyX > 0)
                     possibleMoves.Add(new Point(emptyX - 1, emptyY));
 
-                // Check right
                 if (emptyX < 3)
                     possibleMoves.Add(new Point(emptyX + 1, emptyY));
 
-                // Select a random move
                 if (possibleMoves.Count > 0)
                 {
                     Point move = possibleMoves[_random.Next(possibleMoves.Count)];
 
-                    // Swap
                     state[emptyY, emptyX] = state[move.Y, move.X];
                     state[move.Y, move.X] = 0;
 
-                    // Update empty position
                     emptyX = move.X;
                     emptyY = move.Y;
                 }
@@ -80,7 +69,6 @@ namespace FifteenPuzzleCore.Models
 
         private bool IsSolvable(int[,] state, int emptyY)
         {
-            // Convert the 2D array to a 1D array for easier iteration
             int[] flat = new int[16];
             int k = 0;
 
@@ -92,7 +80,6 @@ namespace FifteenPuzzleCore.Models
                 }
             }
 
-            // Count inversions
             int inversions = 0;
             for (int i = 0; i < 16; i++)
             {
@@ -107,9 +94,6 @@ namespace FifteenPuzzleCore.Models
                 }
             }
 
-            // For a 4x4 puzzle, if the empty cell is on an odd row counting from the bottom 
-            // and the number of inversions is even, or if the empty cell is on an even row 
-            // counting from the bottom and the number of inversions is odd, then the puzzle is solvable
             int emptyRowFromBottom = 4 - emptyY;
 
             return (emptyRowFromBottom % 2 == 1 && inversions % 2 == 0) ||

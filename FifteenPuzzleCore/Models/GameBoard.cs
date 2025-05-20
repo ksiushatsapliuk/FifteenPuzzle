@@ -1,5 +1,4 @@
-﻿using System;
-using FifteenPuzzleCore.Enums;
+﻿using FifteenPuzzleCore.Enums;
 using FifteenPuzzleCore.EventArgs;
 using FifteenPuzzleCore.Interfaces;
 

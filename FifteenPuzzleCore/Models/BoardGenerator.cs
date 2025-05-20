@@ -1,8 +1,5 @@
-﻿using System;
-using FifteenPuzzleCore.Interfaces;
+﻿using FifteenPuzzleCore.Interfaces;
 using System.Drawing;
-using System.Collections.Generic;
-using FifteenPuzzleCore.Interfaces;
 
 namespace FifteenPuzzleCore.Models
 {

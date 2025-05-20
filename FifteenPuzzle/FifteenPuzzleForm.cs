@@ -1,17 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using FifteenPuzzleCore.EventArgs;
-using FifteenPuzzleCore.Interfaces;
 using FifteenPuzzleCore.Models;
 using FifteenPuzzleCore.Services;
-using FifteenPuzzleCore.Utilities;
 
 namespace FifteenPuzzle
 {

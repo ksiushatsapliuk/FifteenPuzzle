@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace FifteenPuzzleCore.Models
+﻿namespace FifteenPuzzleCore.Models
 {
     public class Move
     {

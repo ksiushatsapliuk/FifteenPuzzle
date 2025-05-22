@@ -15,10 +15,37 @@ namespace FifteenPuzzleCore.Models
         private int _moveCount = 0;
         private bool _isSolving = false;
 
-        public int[,] State => (int[,])_state.Clone();
-        public int EmptyX => _emptyX;
-        public int EmptyY => _emptyY;
-        public int MoveCount => _moveCount;
+        public int[,] State
+        {
+            get
+            {
+                return (int[,])_state.Clone();
+            }
+        }
+
+        public int EmptyX
+        {
+            get
+            {
+                return _emptyX;
+            }
+        }
+
+        public int EmptyY
+        {
+            get
+            {
+                return _emptyY;
+            }
+        }
+
+        public int MoveCount
+        {
+            get
+            {
+                return _moveCount;
+            }
+        }
         public GameState CurrentState { get; private set; } = GameState.InProgress;
 
         public void Initialize(int[,] initialState, int emptyX, int emptyY)
@@ -95,12 +122,18 @@ namespace FifteenPuzzleCore.Models
 
         protected virtual void OnBoardChanged()
         {
-            BoardChanged?.Invoke(this, new BoardChangedEA(_state, _moveCount));
+            if (BoardChanged != null)
+            {
+                BoardChanged.Invoke(this, new BoardChangedEA(_state, _moveCount));
+            }
         }
 
         protected virtual void OnGameWon(int moveCount)
         {
-            GameWon?.Invoke(this, new GameWonEA(moveCount));
+            if (GameWon != null)
+            {
+                GameWon.Invoke(this, new GameWonEA(moveCount));
+            }
         }
     }
 }

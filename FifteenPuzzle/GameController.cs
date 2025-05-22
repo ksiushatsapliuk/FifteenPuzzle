@@ -22,7 +22,14 @@ namespace FifteenPuzzle
         public event EventHandler<EventArgs> AutoSolverStateChanged;
 
         public bool IsAutoSolving { get; private set; }
-        public int BestRecord => _recordManager.BestRecord;
+        public int BestRecord
+        {
+            get
+            {
+                int result = _recordManager.BestRecord;
+                return result;
+            }
+        }
 
         public GameController(
             IGameBoard gameBoard,
@@ -35,11 +42,19 @@ namespace FifteenPuzzle
             _gameSolver = gameSolver;
             _recordManager = recordManager;
 
-            _gameBoard.BoardChanged += (s, e) => BoardChanged?.Invoke(this, e);
+            _gameBoard.BoardChanged += OnGameBoardChanged;
             _gameBoard.GameWon += HandleGameWon;
 
             _recordManager.LoadRecord();
             InitializeProgressForm();
+        }
+
+        private void OnGameBoardChanged(object sender, BoardChangedEA e)
+        {
+            if (BoardChanged != null)
+            {
+                BoardChanged.Invoke(this, e);
+            }
         }
 
         private void InitializeProgressForm()
@@ -78,29 +93,30 @@ namespace FifteenPuzzle
                 Location = new System.Drawing.Point(140, 75)
             };
 
-            cancelButton.Click += (s, e) =>
-            {
-                _manuallyStoppedSolving = true;
-                CancelAutoSolve(showMessage: true);
-                _solverProgressForm.Hide();
-            };
+            cancelButton.Click += OnCancelButtonClick;
 
             _solverProgressForm.Controls.Add(_solverStatusLabel);
             _solverProgressForm.Controls.Add(_solverProgressBar);
             _solverProgressForm.Controls.Add(cancelButton);
 
-            _solverProgressForm.FormClosing += (s, e) =>
-            {
-                if (IsAutoSolving)
-                {
-                    _manuallyStoppedSolving = true;
-                    CancelAutoSolve(showMessage: true);
-                }
-                e.Cancel = true; 
-                _solverProgressForm.Hide();
-            };
+            _solverProgressForm.FormClosing += OnSolverProgressFormClosing;
         }
-
+        private void OnCancelButtonClick(object sender, EventArgs e)
+        {
+            _manuallyStoppedSolving = true;
+            CancelAutoSolve(showMessage: true);
+            _solverProgressForm.Hide();
+        }
+        private void OnSolverProgressFormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (IsAutoSolving)
+            {
+                _manuallyStoppedSolving = true;
+                CancelAutoSolve(showMessage: true);
+            }
+            e.Cancel = true;
+            _solverProgressForm.Hide();
+        }
         public void StartNewGame()
         {
             CancelAutoSolve(showMessage: false);
@@ -271,12 +287,19 @@ namespace FifteenPuzzle
         private void HandleGameWon(object sender, GameWonEA e)
         {
             _recordManager.SaveRecord(e.MoveCount);
-            GameWon?.Invoke(this, e);
+
+            if (GameWon != null)
+            {
+                GameWon.Invoke(this, e);
+            }
         }
 
         private void OnAutoSolverStateChanged()
         {
-            AutoSolverStateChanged?.Invoke(this, EventArgs.Empty);
+            if (AutoSolverStateChanged != null)
+            {
+                AutoSolverStateChanged.Invoke(this, EventArgs.Empty);
+            }
         }
 
     }
